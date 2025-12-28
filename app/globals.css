@@ -1,6 +1,84 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* --- TAME FONTS --- */
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/tame/Clash/WEB/fonts/ClashDisplay-Variable.woff2') format('woff2');
+  font-weight: 200 700; /* Supports normal and bold if variable */
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Panchang';
+  src: url('/fonts/tame/panchang/WEB/fonts/Panchang-Variable.woff2') format('woff2');
+  font-weight: 200 800;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi-Variable';
+  src: url('/fonts/tame/satoshi/WEB/fonts/Satoshi-Variable.woff') format('woff');
+  font-weight: 300 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Stardom';
+  src: url('/fonts/tame/stardom/WEB/fonts/Stardom-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Telma';
+  src: url('/fonts/tame/telma/WEB/fonts/Telma-Variable.woff') format('woff');
+  font-weight: 300 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* --- WILD FONTS --- */
+
+@font-face {
+  font-family: 'Basteleur';
+  src: url('/fonts/wild/basteleur/webfonts/Basteleur-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cirrus Cumulus';
+  src: url('/fonts/wild/cirrus/CirrusCumulus.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Interlope';
+  src: url('/fonts/wild/interlope/web/Interlope-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lithops';
+  src: url('/fonts/wild/lithops/Lithops-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Mess';
+  src: url('/fonts/wild/mess/Mess-Light_web.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

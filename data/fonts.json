@@ -1,8 +1,12 @@
 [
-  { "name": "Satoshi", "category": "tame" },
-  { "name": "General Sans", "category": "tame" },
   { "name": "Clash Display", "category": "tame" },
-  { "name": "Trickster", "category": "wild" },
-  { "name": "Ouroboros", "category": "wild" },
-  { "name": "Pilowlava", "category": "wild" }
+  { "name": "Panchang", "category": "tame" },
+  { "name": "Satoshi-Variable", "category": "tame" },
+  { "name": "Stardom", "category": "tame" },
+  { "name": "Telma", "category": "tame" },
+  { "name": "Basteleur", "category": "wild" },
+  { "name": "Cirrus Cumulus", "category": "wild" },
+  { "name": "Interlope", "category": "wild" },
+  { "name": "Lithops", "category": "wild" },
+  { "name": "Mess", "category": "wild" }
 ]
