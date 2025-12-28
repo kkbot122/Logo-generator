@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import CreateBrandModal from "@/components/CreateBrandModal"; // Make sure this path is correct
+import CreateBrandModal from "@/components/CreateBrandModal";
 import {
   Plus,
   ArrowUpRight,
@@ -13,7 +13,7 @@ import {
   Clock,
   Layout,
 } from "lucide-react";
-import Link from "next/link"; // Added for navigation
+import Link from "next/link"; 
 
 // Define the shape of the data we expect from the server
 type BrandProject = {
@@ -87,13 +87,13 @@ export default function DashboardClient({ projects }: { projects: BrandProject[]
         />
         <StatCard
           label="Avg Generation Time"
-          value="4s" // Static estimate for now
+          value="4s" 
           change="Fast (Flux Model)"
           icon={<Zap size={20} />}
         />
         <StatCard
           label="Hours Saved"
-          value={(projects.length * 2.5).toFixed(1)} // Estimate 2.5hrs saved per project
+          value={(projects.length * 2.5).toFixed(1)} 
           change="vs Manual Design"
           icon={<Clock size={20} />}
         />
@@ -144,9 +144,10 @@ export default function DashboardClient({ projects }: { projects: BrandProject[]
                 filteredProjects.map((project) => (
                     <ProjectRow
                       key={project.id}
+                      id={project.id} // Pass ID here
                       name={project.brandName}
                       type="Brand Identity"
-                      status="Completed" // Assuming generated = success
+                      status="Completed" 
                       date={new Date(project.createdAt).toLocaleDateString("en-US", {
                         month: 'short',
                         day: 'numeric',
@@ -194,11 +195,13 @@ function StatCard({
 }
 
 function ProjectRow({
+  id, // Accept ID
   name,
   type,
   status,
   date,
 }: {
+  id: string;
   name: string;
   type: string;
   status: string;
@@ -219,11 +222,11 @@ function ProjectRow({
 
   return (
     <div className="grid grid-cols-12 gap-4 p-4 border-b border-black/5 last:border-b-0 hover:bg-neutral-50 items-center group transition-colors">
-      {/* Name Column */}
+      {/* Name Column - NOW CLICKABLE */}
       <div className="col-span-6 md:col-span-5 flex flex-col justify-center">
-        <span className="font-bold text-sm uppercase tracking-tight group-hover:underline decoration-2 underline-offset-4 cursor-pointer truncate">
+        <Link href={`/projects/${id}`} className="font-bold text-sm uppercase tracking-tight group-hover:underline decoration-2 underline-offset-4 cursor-pointer truncate">
           {name}
-        </span>
+        </Link>
         <span className="text-[10px] text-gray-500 font-medium uppercase tracking-widest">
           {type}
         </span>
@@ -245,14 +248,15 @@ function ProjectRow({
         {date}
       </div>
 
-      {/* Action Column */}
+      {/* Action Column - LINK ADDED */}
       <div className="col-span-6 md:col-span-1 flex justify-end gap-2">
-        <button
-          className="p-2 hover:bg-black hover:text-white transition-colors rounded-sm"
+        <Link
+          href={`/projects/${id}`}
+          className="p-2 hover:bg-black hover:text-white transition-colors rounded-sm flex items-center justify-center"
           title="Open Project"
         >
           <ArrowUpRight size={16} />
-        </button>
+        </Link>
       </div>
     </div>
   );

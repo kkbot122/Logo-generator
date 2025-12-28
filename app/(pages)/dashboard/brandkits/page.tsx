@@ -1,0 +1,184 @@
+/* src/app/dashboard/brand-kits/page.tsx */
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { 
+  Plus, 
+  Search, 
+  Download, 
+  MoreHorizontal, 
+  Type, 
+  Palette,
+  Copy
+} from "lucide-react";
+
+export default async function BrandKitsPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id) {
+    redirect("/");
+  }
+
+  // Fetch projects to generate kits from
+  const kits = await prisma.brandIdentity.findMany({
+    where: { userId: session.user.id },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return (
+    <div className="min-h-full flex flex-col bg-[#F3F2ED] text-black">
+      
+      {/* 1. HEADER */}
+      <header className="sticky top-0 z-10 bg-[#F3F2ED]/95 backdrop-blur-sm px-8 py-8 border-b border-black/10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-2">
+              <span>Library</span>
+              <span className="text-black">/</span>
+              <span>Assets</span>
+           </div>
+           <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none">
+             Brand Kits
+           </h1>
+        </div>
+
+        <div className="flex items-center gap-3 w-full md:w-auto">
+           <div className="relative flex-1 md:w-64 group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-neutral-400" />
+              <input 
+                type="text" 
+                placeholder="FIND ASSETS..." 
+                className="w-full bg-white border border-black/10 pl-9 pr-4 h-10 text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:border-black transition-all rounded-sm"
+              />
+           </div>
+           <button className="h-10 px-5 bg-black text-white hover:bg-neutral-800 transition-colors rounded-sm flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-sm">
+             <Plus size={14} /> 
+             <span className="hidden sm:inline">Create Kit</span>
+           </button>
+        </div>
+      </header>
+
+      {/* 2. MAIN GRID */}
+      <main className="p-8">
+        {kits.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {kits.map((kit) => (
+              <BrandKitCard key={kit.id} kit={kit} />
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+
+// --- SUBCOMPONENTS ---
+
+function BrandKitCard({ kit }: { kit: any }) {
+  const colors = kit.colors as any;
+  const fonts = kit.fonts as any;
+
+  return (
+    <div className="bg-white border border-black/10 rounded-sm overflow-hidden flex flex-col group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+      
+      {/* CARD HEADER: Preview */}
+      <div className="h-48 border-b border-black/10 flex relative">
+        
+        {/* Left: Typography Preview */}
+        <div className="w-1/2 p-6 flex flex-col justify-between border-r border-black/10 bg-neutral-50/50">
+           <div className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 flex items-center gap-2">
+             <Type size={12} /> Typography
+           </div>
+           <div className="text-center">
+              <span className="text-5xl font-serif italic block mb-[-10px] opacity-80">Aa</span>
+              <span className="text-5xl font-black block z-10 relative">Bb</span>
+           </div>
+           <div className="text-[10px] font-medium truncate text-center opacity-60">
+             {fonts?.selected || 'Sans Serif'}
+           </div>
+        </div>
+
+        {/* Right: Color Palette Preview */}
+        <div className="w-1/2 flex flex-col">
+           <div className="p-3 border-b border-black/10 text-[10px] font-bold uppercase tracking-widest text-neutral-400 flex items-center gap-2 bg-white">
+             <Palette size={12} /> Palette
+           </div>
+           <div className="flex-1 flex flex-col">
+              {/* Base Color (Large) */}
+              <div 
+                className="flex-[2] w-full relative group/color"
+                style={{ backgroundColor: colors?.base }}
+              >
+                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/color:opacity-100 transition-opacity">
+                    <span className="bg-black/80 text-white text-[9px] px-1 py-0.5 rounded-sm uppercase">{colors?.base}</span>
+                 </div>
+              </div>
+              {/* Secondary Colors (Strip) */}
+              <div className="flex-1 flex w-full">
+                {colors?.palette?.slice(0, 3).map((hex: string, i: number) => (
+                   <div key={i} className="flex-1 h-full relative group/color" style={{ backgroundColor: hex }}>
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/color:opacity-100 transition-opacity">
+                         <span className="bg-black/80 text-white text-[8px] px-1 py-0.5 rounded-sm uppercase">Copy</span>
+                      </div>
+                   </div>
+                ))}
+              </div>
+           </div>
+        </div>
+      </div>
+
+      {/* CARD BODY: Info & Actions */}
+      <div className="p-6 flex flex-col gap-4">
+         <div className="flex justify-between items-start">
+            <div>
+              <h3 className="text-lg font-black uppercase tracking-tight mb-1 group-hover:underline decoration-2 underline-offset-4 cursor-pointer">
+                {kit.brandName}
+              </h3>
+              <p className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold">
+                Updated {new Date(kit.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+            
+            {/* Context Menu Button */}
+            <button className="h-8 w-8 flex items-center justify-center hover:bg-black hover:text-white rounded-sm transition-colors">
+               <MoreHorizontal size={16} />
+            </button>
+         </div>
+
+         {/* Quick Actions Footer */}
+         <div className="grid grid-cols-2 gap-3 mt-2">
+            <button className="flex items-center justify-center gap-2 py-3 border border-black/10 hover:border-black rounded-sm text-[10px] font-bold uppercase tracking-widest transition-all hover:bg-neutral-50">
+               <Copy size={12} /> Copy Hex
+            </button>
+            <Link 
+              href={`/projects/${kit.id}`}
+              className="flex items-center justify-center gap-2 py-3 bg-black text-white hover:bg-neutral-800 rounded-sm text-[10px] font-bold uppercase tracking-widest transition-all"
+            >
+               <Download size={12} /> Export
+            </Link>
+         </div>
+      </div>
+
+    </div>
+  )
+}
+
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[40vh] border-2 border-dashed border-black/10 rounded-sm p-12">
+       <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mb-6">
+          <Palette size={24} className="opacity-30" />
+       </div>
+       <h3 className="text-xl font-black uppercase tracking-tight mb-2">No Brand Kits Found</h3>
+       <p className="text-sm text-neutral-500 max-w-xs text-center mb-6">
+         Create a project first. Brand kits are automatically generated from your design projects.
+       </p>
+       <Link href="/generate" className="px-6 py-3 bg-black text-white text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-neutral-800">
+         Generate New Brand
+       </Link>
+    </div>
+  )
+}

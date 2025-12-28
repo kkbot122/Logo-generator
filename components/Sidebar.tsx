@@ -7,9 +7,7 @@ import {
   Folder, 
   PieChart, 
   Settings, 
-  LogOut, 
-  Plus,
-  LifeBuoy
+  LogOut,
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -17,8 +15,8 @@ export default function Sidebar() {
 
   const navItems = [
     { label: 'Overview', href: '/dashboard', icon: LayoutGrid },
-    { label: 'Projects', href: '/dashboard/projects', icon: Folder },
-    { label: 'Brand Kits', href: '/dashboard/brand-kits', icon: PieChart },
+    { label: 'Projects', href: '/projects', icon: Folder },
+    { label: 'Brand Kits', href: '/dashboard/brandkits', icon: PieChart },
     { label: 'Settings', href: '/dashboard/settings', icon: Settings },
   ];
 
