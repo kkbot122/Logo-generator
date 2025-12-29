@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: `You are a Senior Brand Designer. Return ONLY valid JSON.
+          content: `You are a Senior Brand Designer and Strategist. Return ONLY valid JSON.
                     You must pick a font from this list: [${availableFonts}].
                     Do not hallucinate fonts outside this list.`,
         },
@@ -64,10 +64,12 @@ export async function POST(req: Request) {
                     Return JSON with this exact schema:
                     {
                       "brand_name": "String (Short, catchy name)",
+                      "slogan": "String (A short, memorable tagline for the brand)",
+                      "keywords": ["String", "String", "String", "String", "String"] (5 descriptive keywords),
                       "base_color": "Hex Code (e.g. #FF5733)",
                       "color_harmony": "String (One of: analogous, complementary, triadic, split-complementary)",
                       "font_name": "String (Must be one from the provided list)",
-                      "logo_prompt": "String (A highly detailed, descriptive prompt for an AI image generator to create a minimalist vector logo. Mention white background.)",
+                      "logo_prompt": "String (A highly detailed, descriptive prompt for an AI image generator to create a minimalist vector logo. Mention white background explicitly.)",
                       "rationale": "String (Why you chose this vibe)"
                     }`,
         },
@@ -92,7 +94,7 @@ export async function POST(req: Request) {
     }
 
     // Validate AI data has required fields
-    const requiredFields = ["brand_name", "base_color", "color_harmony", "font_name", "logo_prompt"];
+    const requiredFields = ["brand_name", "base_color", "color_harmony", "font_name", "logo_prompt", "slogan"];
     for (const field of requiredFields) {
       if (!aiData[field]) {
         console.error(`AI response missing required field: ${field}`, aiData);
@@ -211,7 +213,7 @@ export async function POST(req: Request) {
     try {
       const imageBlob = await hf.textToImage({
         model: "black-forest-labs/FLUX.1-schnell",
-        inputs: `${aiData.logo_prompt}, vector style, flat design, white background, high quality, no text`,
+        inputs: `${aiData.logo_prompt}, minimal vector logo, flat design, white background, high quality, 4k, clean lines, no text, isolated on white`,
         parameters: { num_inference_steps: 4, guidance_scale: 7.5 },
       }) as unknown as Blob;
 
@@ -245,6 +247,8 @@ export async function POST(req: Request) {
             category: vibe,
           },
           logoUrl: logoUrl,
+          // slogan: aiData.slogan,     // TODO: Uncomment after migration
+          // keywords: aiData.keywords || [], // TODO: Uncomment after migration
         },
       });
 

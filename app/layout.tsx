@@ -2,12 +2,16 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
-
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'AI Logo Architect',
+  title: 'Aura: AI Logo Maker',
   description: 'Design intelligence for your brand.',
+  // ADD THIS SECTION
+  icons: {
+    icon: '/aura_logo.png', // The path to your image in the public folder
+    apple: '/aura_logo.png', // Optional: for iPhone home screen shortcuts
+  },
 }
 
 export default function RootLayout({

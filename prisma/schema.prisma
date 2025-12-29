@@ -63,6 +63,8 @@ model BrandIdentity {
   colors    Json // Stores palette array
   fonts     Json // Stores font info
   logoUrl   String // R2 Public URL
+  slogan    String?
+  keywords  String[]
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
