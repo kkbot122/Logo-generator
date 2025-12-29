@@ -13,7 +13,7 @@ import {
   Clock,
   Layout,
 } from "lucide-react";
-import Link from "next/link"; 
+import Link from "next/link";
 
 // Define the shape of the data we expect from the server
 type BrandProject = {
@@ -23,7 +23,16 @@ type BrandProject = {
   logoUrl: string;
 };
 
-export default function DashboardClient({ projects }: { projects: BrandProject[] }) {
+// Update props to accept credit info
+export default function DashboardClient({
+  projects,
+  credits,
+  plan,
+}: {
+  projects: BrandProject[];
+  credits: number;
+  plan: string;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -59,13 +68,14 @@ export default function DashboardClient({ projects }: { projects: BrandProject[]
               Credits
             </span>
             <span className="text-xl font-black tracking-tighter">
-              {/* Dynamic Credit Calculation could go here */}
-              850 / 1000
+              {/* DYNAMIC CREDIT DISPLAY */}
+              {plan === "PRO" ? "UNLIMITED" : `${credits} / 2`}
             </span>
           </div>
-          <button 
-          onClick={() => setIsModalOpen(true)}
-          className="h-12 px-6 bg-black text-[#F3F2ED] flex items-center gap-3 hover:bg-neutral-800 transition-colors rounded-sm group">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="h-12 px-6 bg-black text-[#F3F2ED] flex items-center gap-3 hover:bg-neutral-800 transition-colors rounded-sm group"
+          >
             <span className="text-xs font-bold uppercase tracking-widest">
               New Project
             </span>
@@ -87,13 +97,13 @@ export default function DashboardClient({ projects }: { projects: BrandProject[]
         />
         <StatCard
           label="Avg Generation Time"
-          value="4s" 
+          value="4s"
           change="Fast (Flux Model)"
           icon={<Zap size={20} />}
         />
         <StatCard
           label="Hours Saved"
-          value={(projects.length * 2.5).toFixed(1)} 
+          value={(projects.length * 2.5).toFixed(1)}
           change="vs Manual Design"
           icon={<Clock size={20} />}
         />
@@ -137,24 +147,27 @@ export default function DashboardClient({ projects }: { projects: BrandProject[]
           {/* Table Rows - MAPPED FROM REAL DATA */}
           <div className="flex flex-col">
             {filteredProjects.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm uppercase tracking-widest">
-                    No projects found. Create one to get started.
-                </div>
+              <div className="p-8 text-center text-gray-400 text-sm uppercase tracking-widest">
+                No projects found. Create one to get started.
+              </div>
             ) : (
-                filteredProjects.map((project) => (
-                    <ProjectRow
-                      key={project.id}
-                      id={project.id} // Pass ID here
-                      name={project.brandName}
-                      type="Brand Identity"
-                      status="Completed" 
-                      date={new Date(project.createdAt).toLocaleDateString("en-US", {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    />
-                ))
+              filteredProjects.map((project) => (
+                <ProjectRow
+                  key={project.id}
+                  id={project.id}
+                  name={project.brandName}
+                  type="Brand Identity"
+                  status="Completed"
+                  date={new Date(project.createdAt).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    }
+                  )}
+                />
+              ))
             )}
           </div>
         </div>
@@ -195,7 +208,7 @@ function StatCard({
 }
 
 function ProjectRow({
-  id, // Accept ID
+  id,
   name,
   type,
   status,
@@ -222,9 +235,12 @@ function ProjectRow({
 
   return (
     <div className="grid grid-cols-12 gap-4 p-4 border-b border-black/5 last:border-b-0 hover:bg-neutral-50 items-center group transition-colors">
-      {/* Name Column - NOW CLICKABLE */}
+      {/* Name Column - CLICKABLE */}
       <div className="col-span-6 md:col-span-5 flex flex-col justify-center">
-        <Link href={`/projects/${id}`} className="font-bold text-sm uppercase tracking-tight group-hover:underline decoration-2 underline-offset-4 cursor-pointer truncate">
+        <Link
+          href={`/projects/${id}`}
+          className="font-bold text-sm uppercase tracking-tight group-hover:underline decoration-2 underline-offset-4 cursor-pointer truncate"
+        >
           {name}
         </Link>
         <span className="text-[10px] text-gray-500 font-medium uppercase tracking-widest">
@@ -248,7 +264,7 @@ function ProjectRow({
         {date}
       </div>
 
-      {/* Action Column - LINK ADDED */}
+      {/* Action Column - CLICKABLE LINK */}
       <div className="col-span-6 md:col-span-1 flex justify-end gap-2">
         <Link
           href={`/projects/${id}`}

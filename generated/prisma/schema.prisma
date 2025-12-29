@@ -9,14 +9,20 @@ generator client {
 
 // User & Auth
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  brands        BrandIdentity[]
+
+  plan            String   @default("FREE") // "FREE" or "PRO"
+  credits         Int      @default(2) // Weekly generation credits
+  lastCreditReset DateTime @default(now()) // When did the week start?
+
+  lifetimeDownloads Int             @default(0)
+  brands            BrandIdentity[]
 }
 
 model Account {
@@ -63,6 +69,8 @@ model BrandIdentity {
   colors    Json // Stores palette array
   fonts     Json // Stores font info
   logoUrl   String // R2 Public URL
+  slogan    String?
+  keywords  String[]
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

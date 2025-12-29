@@ -1280,8 +1280,20 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    credits: number | null
+    lifetimeDownloads: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    credits: number | null
+    lifetimeDownloads: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -1290,6 +1302,10 @@ export namespace Prisma {
     email: string | null
     emailVerified: Date | null
     image: string | null
+    plan: string | null
+    credits: number | null
+    lastCreditReset: Date | null
+    lifetimeDownloads: number | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1298,6 +1314,10 @@ export namespace Prisma {
     email: string | null
     emailVerified: Date | null
     image: string | null
+    plan: string | null
+    credits: number | null
+    lastCreditReset: Date | null
+    lifetimeDownloads: number | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1306,9 +1326,23 @@ export namespace Prisma {
     email: number
     emailVerified: number
     image: number
+    plan: number
+    credits: number
+    lastCreditReset: number
+    lifetimeDownloads: number
     _all: number
   }
 
+
+  export type UserAvgAggregateInputType = {
+    credits?: true
+    lifetimeDownloads?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    credits?: true
+    lifetimeDownloads?: true
+  }
 
   export type UserMinAggregateInputType = {
     id?: true
@@ -1316,6 +1350,10 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
+    plan?: true
+    credits?: true
+    lastCreditReset?: true
+    lifetimeDownloads?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1324,6 +1362,10 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
+    plan?: true
+    credits?: true
+    lastCreditReset?: true
+    lifetimeDownloads?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1332,6 +1374,10 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
+    plan?: true
+    credits?: true
+    lastCreditReset?: true
+    lifetimeDownloads?: true
     _all?: true
   }
 
@@ -1373,6 +1419,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -1403,6 +1461,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -1413,7 +1473,13 @@ export namespace Prisma {
     email: string
     emailVerified: Date | null
     image: string | null
+    plan: string
+    credits: number
+    lastCreditReset: Date
+    lifetimeDownloads: number
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -1438,6 +1504,10 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    plan?: boolean
+    credits?: boolean
+    lastCreditReset?: boolean
+    lifetimeDownloads?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     brands?: boolean | User$brandsArgs<ExtArgs>
@@ -1450,6 +1520,10 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    plan?: boolean
+    credits?: boolean
+    lastCreditReset?: boolean
+    lifetimeDownloads?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1458,6 +1532,10 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    plan?: boolean
+    credits?: boolean
+    lastCreditReset?: boolean
+    lifetimeDownloads?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1466,9 +1544,13 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    plan?: boolean
+    credits?: boolean
+    lastCreditReset?: boolean
+    lifetimeDownloads?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "plan" | "credits" | "lastCreditReset" | "lifetimeDownloads", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -1491,6 +1573,10 @@ export namespace Prisma {
       email: string
       emailVerified: Date | null
       image: string | null
+      plan: string
+      credits: number
+      lastCreditReset: Date
+      lifetimeDownloads: number
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1922,6 +2008,10 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly emailVerified: FieldRef<"User", 'DateTime'>
     readonly image: FieldRef<"User", 'String'>
+    readonly plan: FieldRef<"User", 'String'>
+    readonly credits: FieldRef<"User", 'Int'>
+    readonly lastCreditReset: FieldRef<"User", 'DateTime'>
+    readonly lifetimeDownloads: FieldRef<"User", 'Int'>
   }
     
 
@@ -5638,6 +5728,7 @@ export namespace Prisma {
     userId: string | null
     brandName: string | null
     logoUrl: string | null
+    slogan: string | null
     createdAt: Date | null
   }
 
@@ -5646,6 +5737,7 @@ export namespace Prisma {
     userId: string | null
     brandName: string | null
     logoUrl: string | null
+    slogan: string | null
     createdAt: Date | null
   }
 
@@ -5656,6 +5748,8 @@ export namespace Prisma {
     colors: number
     fonts: number
     logoUrl: number
+    slogan: number
+    keywords: number
     createdAt: number
     _all: number
   }
@@ -5666,6 +5760,7 @@ export namespace Prisma {
     userId?: true
     brandName?: true
     logoUrl?: true
+    slogan?: true
     createdAt?: true
   }
 
@@ -5674,6 +5769,7 @@ export namespace Prisma {
     userId?: true
     brandName?: true
     logoUrl?: true
+    slogan?: true
     createdAt?: true
   }
 
@@ -5684,6 +5780,8 @@ export namespace Prisma {
     colors?: true
     fonts?: true
     logoUrl?: true
+    slogan?: true
+    keywords?: true
     createdAt?: true
     _all?: true
   }
@@ -5767,6 +5865,8 @@ export namespace Prisma {
     colors: JsonValue
     fonts: JsonValue
     logoUrl: string
+    slogan: string | null
+    keywords: string[]
     createdAt: Date
     _count: BrandIdentityCountAggregateOutputType | null
     _min: BrandIdentityMinAggregateOutputType | null
@@ -5794,6 +5894,8 @@ export namespace Prisma {
     colors?: boolean
     fonts?: boolean
     logoUrl?: boolean
+    slogan?: boolean
+    keywords?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["brandIdentity"]>
@@ -5805,6 +5907,8 @@ export namespace Prisma {
     colors?: boolean
     fonts?: boolean
     logoUrl?: boolean
+    slogan?: boolean
+    keywords?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["brandIdentity"]>
@@ -5816,6 +5920,8 @@ export namespace Prisma {
     colors?: boolean
     fonts?: boolean
     logoUrl?: boolean
+    slogan?: boolean
+    keywords?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["brandIdentity"]>
@@ -5827,10 +5933,12 @@ export namespace Prisma {
     colors?: boolean
     fonts?: boolean
     logoUrl?: boolean
+    slogan?: boolean
+    keywords?: boolean
     createdAt?: boolean
   }
 
-  export type BrandIdentityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "brandName" | "colors" | "fonts" | "logoUrl" | "createdAt", ExtArgs["result"]["brandIdentity"]>
+  export type BrandIdentityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "brandName" | "colors" | "fonts" | "logoUrl" | "slogan" | "keywords" | "createdAt", ExtArgs["result"]["brandIdentity"]>
   export type BrandIdentityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -5853,6 +5961,8 @@ export namespace Prisma {
       colors: Prisma.JsonValue
       fonts: Prisma.JsonValue
       logoUrl: string
+      slogan: string | null
+      keywords: string[]
       createdAt: Date
     }, ExtArgs["result"]["brandIdentity"]>
     composites: {}
@@ -6284,6 +6394,8 @@ export namespace Prisma {
     readonly colors: FieldRef<"BrandIdentity", 'Json'>
     readonly fonts: FieldRef<"BrandIdentity", 'Json'>
     readonly logoUrl: FieldRef<"BrandIdentity", 'String'>
+    readonly slogan: FieldRef<"BrandIdentity", 'String'>
+    readonly keywords: FieldRef<"BrandIdentity", 'String[]'>
     readonly createdAt: FieldRef<"BrandIdentity", 'DateTime'>
   }
     
@@ -6718,7 +6830,11 @@ export namespace Prisma {
     name: 'name',
     email: 'email',
     emailVerified: 'emailVerified',
-    image: 'image'
+    image: 'image',
+    plan: 'plan',
+    credits: 'credits',
+    lastCreditReset: 'lastCreditReset',
+    lifetimeDownloads: 'lifetimeDownloads'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -6770,6 +6886,8 @@ export namespace Prisma {
     colors: 'colors',
     fonts: 'fonts',
     logoUrl: 'logoUrl',
+    slogan: 'slogan',
+    keywords: 'keywords',
     createdAt: 'createdAt'
   };
 
@@ -6903,6 +7021,10 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
+    plan?: StringFilter<"User"> | string
+    credits?: IntFilter<"User"> | number
+    lastCreditReset?: DateTimeFilter<"User"> | Date | string
+    lifetimeDownloads?: IntFilter<"User"> | number
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
     brands?: BrandIdentityListRelationFilter
@@ -6914,6 +7036,10 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
+    plan?: SortOrder
+    credits?: SortOrder
+    lastCreditReset?: SortOrder
+    lifetimeDownloads?: SortOrder
     accounts?: AccountOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
     brands?: BrandIdentityOrderByRelationAggregateInput
@@ -6928,6 +7054,10 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
+    plan?: StringFilter<"User"> | string
+    credits?: IntFilter<"User"> | number
+    lastCreditReset?: DateTimeFilter<"User"> | Date | string
+    lifetimeDownloads?: IntFilter<"User"> | number
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
     brands?: BrandIdentityListRelationFilter
@@ -6939,9 +7069,15 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
+    plan?: SortOrder
+    credits?: SortOrder
+    lastCreditReset?: SortOrder
+    lifetimeDownloads?: SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -6953,6 +7089,10 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     emailVerified?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
+    plan?: StringWithAggregatesFilter<"User"> | string
+    credits?: IntWithAggregatesFilter<"User"> | number
+    lastCreditReset?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    lifetimeDownloads?: IntWithAggregatesFilter<"User"> | number
   }
 
   export type AccountWhereInput = {
@@ -7161,6 +7301,8 @@ export namespace Prisma {
     colors?: JsonFilter<"BrandIdentity">
     fonts?: JsonFilter<"BrandIdentity">
     logoUrl?: StringFilter<"BrandIdentity"> | string
+    slogan?: StringNullableFilter<"BrandIdentity"> | string | null
+    keywords?: StringNullableListFilter<"BrandIdentity">
     createdAt?: DateTimeFilter<"BrandIdentity"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -7172,6 +7314,8 @@ export namespace Prisma {
     colors?: SortOrder
     fonts?: SortOrder
     logoUrl?: SortOrder
+    slogan?: SortOrderInput | SortOrder
+    keywords?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
   }
@@ -7186,6 +7330,8 @@ export namespace Prisma {
     colors?: JsonFilter<"BrandIdentity">
     fonts?: JsonFilter<"BrandIdentity">
     logoUrl?: StringFilter<"BrandIdentity"> | string
+    slogan?: StringNullableFilter<"BrandIdentity"> | string | null
+    keywords?: StringNullableListFilter<"BrandIdentity">
     createdAt?: DateTimeFilter<"BrandIdentity"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -7197,6 +7343,8 @@ export namespace Prisma {
     colors?: SortOrder
     fonts?: SortOrder
     logoUrl?: SortOrder
+    slogan?: SortOrderInput | SortOrder
+    keywords?: SortOrder
     createdAt?: SortOrder
     _count?: BrandIdentityCountOrderByAggregateInput
     _max?: BrandIdentityMaxOrderByAggregateInput
@@ -7213,6 +7361,8 @@ export namespace Prisma {
     colors?: JsonWithAggregatesFilter<"BrandIdentity">
     fonts?: JsonWithAggregatesFilter<"BrandIdentity">
     logoUrl?: StringWithAggregatesFilter<"BrandIdentity"> | string
+    slogan?: StringNullableWithAggregatesFilter<"BrandIdentity"> | string | null
+    keywords?: StringNullableListFilter<"BrandIdentity">
     createdAt?: DateTimeWithAggregatesFilter<"BrandIdentity"> | Date | string
   }
 
@@ -7222,6 +7372,10 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
+    plan?: string
+    credits?: number
+    lastCreditReset?: Date | string
+    lifetimeDownloads?: number
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     brands?: BrandIdentityCreateNestedManyWithoutUserInput
@@ -7233,6 +7387,10 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
+    plan?: string
+    credits?: number
+    lastCreditReset?: Date | string
+    lifetimeDownloads?: number
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     brands?: BrandIdentityUncheckedCreateNestedManyWithoutUserInput
@@ -7244,6 +7402,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    plan?: StringFieldUpdateOperationsInput | string
+    credits?: IntFieldUpdateOperationsInput | number
+    lastCreditReset?: DateTimeFieldUpdateOperationsInput | Date | string
+    lifetimeDownloads?: IntFieldUpdateOperationsInput | number
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     brands?: BrandIdentityUpdateManyWithoutUserNestedInput
@@ -7255,6 +7417,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    plan?: StringFieldUpdateOperationsInput | string
+    credits?: IntFieldUpdateOperationsInput | number
+    lastCreditReset?: DateTimeFieldUpdateOperationsInput | Date | string
+    lifetimeDownloads?: IntFieldUpdateOperationsInput | number
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     brands?: BrandIdentityUncheckedUpdateManyWithoutUserNestedInput
@@ -7266,6 +7432,10 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
+    plan?: string
+    credits?: number
+    lastCreditReset?: Date | string
+    lifetimeDownloads?: number
   }
 
   export type UserUpdateManyMutationInput = {
@@ -7274,6 +7444,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    plan?: StringFieldUpdateOperationsInput | string
+    credits?: IntFieldUpdateOperationsInput | number
+    lastCreditReset?: DateTimeFieldUpdateOperationsInput | Date | string
+    lifetimeDownloads?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -7282,6 +7456,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    plan?: StringFieldUpdateOperationsInput | string
+    credits?: IntFieldUpdateOperationsInput | number
+    lastCreditReset?: DateTimeFieldUpdateOperationsInput | Date | string
+    lifetimeDownloads?: IntFieldUpdateOperationsInput | number
   }
 
   export type AccountCreateInput = {
@@ -7498,6 +7676,8 @@ export namespace Prisma {
     colors: JsonNullValueInput | InputJsonValue
     fonts: JsonNullValueInput | InputJsonValue
     logoUrl: string
+    slogan?: string | null
+    keywords?: BrandIdentityCreatekeywordsInput | string[]
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutBrandsInput
   }
@@ -7509,6 +7689,8 @@ export namespace Prisma {
     colors: JsonNullValueInput | InputJsonValue
     fonts: JsonNullValueInput | InputJsonValue
     logoUrl: string
+    slogan?: string | null
+    keywords?: BrandIdentityCreatekeywordsInput | string[]
     createdAt?: Date | string
   }
 
@@ -7518,6 +7700,8 @@ export namespace Prisma {
     colors?: JsonNullValueInput | InputJsonValue
     fonts?: JsonNullValueInput | InputJsonValue
     logoUrl?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
+    keywords?: BrandIdentityUpdatekeywordsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBrandsNestedInput
   }
@@ -7529,6 +7713,8 @@ export namespace Prisma {
     colors?: JsonNullValueInput | InputJsonValue
     fonts?: JsonNullValueInput | InputJsonValue
     logoUrl?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
+    keywords?: BrandIdentityUpdatekeywordsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7539,6 +7725,8 @@ export namespace Prisma {
     colors: JsonNullValueInput | InputJsonValue
     fonts: JsonNullValueInput | InputJsonValue
     logoUrl: string
+    slogan?: string | null
+    keywords?: BrandIdentityCreatekeywordsInput | string[]
     createdAt?: Date | string
   }
 
@@ -7548,6 +7736,8 @@ export namespace Prisma {
     colors?: JsonNullValueInput | InputJsonValue
     fonts?: JsonNullValueInput | InputJsonValue
     logoUrl?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
+    keywords?: BrandIdentityUpdatekeywordsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7558,6 +7748,8 @@ export namespace Prisma {
     colors?: JsonNullValueInput | InputJsonValue
     fonts?: JsonNullValueInput | InputJsonValue
     logoUrl?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
+    keywords?: BrandIdentityUpdatekeywordsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7602,6 +7794,28 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
   export type AccountListRelationFilter = {
     every?: AccountWhereInput
     some?: AccountWhereInput
@@ -7643,6 +7857,15 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
+    plan?: SortOrder
+    credits?: SortOrder
+    lastCreditReset?: SortOrder
+    lifetimeDownloads?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    credits?: SortOrder
+    lifetimeDownloads?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -7651,6 +7874,10 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
+    plan?: SortOrder
+    credits?: SortOrder
+    lastCreditReset?: SortOrder
+    lifetimeDownloads?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -7659,6 +7886,15 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
+    plan?: SortOrder
+    credits?: SortOrder
+    lastCreditReset?: SortOrder
+    lifetimeDownloads?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    credits?: SortOrder
+    lifetimeDownloads?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -7711,6 +7947,36 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -7720,17 +7986,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type UserScalarRelationFilter = {
@@ -7815,20 +8070,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type SessionCountOrderByAggregateInput = {
     sessionToken?: SortOrder
     userId?: SortOrder
@@ -7899,6 +8140,14 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type BrandIdentityCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -7906,6 +8155,8 @@ export namespace Prisma {
     colors?: SortOrder
     fonts?: SortOrder
     logoUrl?: SortOrder
+    slogan?: SortOrder
+    keywords?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -7914,6 +8165,7 @@ export namespace Prisma {
     userId?: SortOrder
     brandName?: SortOrder
     logoUrl?: SortOrder
+    slogan?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -7922,6 +8174,7 @@ export namespace Prisma {
     userId?: SortOrder
     brandName?: SortOrder
     logoUrl?: SortOrder
+    slogan?: SortOrder
     createdAt?: SortOrder
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
@@ -8003,6 +8256,18 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type AccountUpdateManyWithoutUserNestedInput = {
@@ -8103,10 +8368,6 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
   export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
@@ -8129,10 +8390,19 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSessionsInput, UserUpdateWithoutSessionsInput>, UserUncheckedUpdateWithoutSessionsInput>
   }
 
+  export type BrandIdentityCreatekeywordsInput = {
+    set: string[]
+  }
+
   export type UserCreateNestedOneWithoutBrandsInput = {
     create?: XOR<UserCreateWithoutBrandsInput, UserUncheckedCreateWithoutBrandsInput>
     connectOrCreate?: UserCreateOrConnectWithoutBrandsInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type BrandIdentityUpdatekeywordsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type UserUpdateOneRequiredWithoutBrandsNestedInput = {
@@ -8182,6 +8452,28 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -8197,17 +8489,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -8252,7 +8533,34 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -8260,7 +8568,10 @@ export namespace Prisma {
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -8288,20 +8599,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -8397,6 +8694,8 @@ export namespace Prisma {
     colors: JsonNullValueInput | InputJsonValue
     fonts: JsonNullValueInput | InputJsonValue
     logoUrl: string
+    slogan?: string | null
+    keywords?: BrandIdentityCreatekeywordsInput | string[]
     createdAt?: Date | string
   }
 
@@ -8406,6 +8705,8 @@ export namespace Prisma {
     colors: JsonNullValueInput | InputJsonValue
     fonts: JsonNullValueInput | InputJsonValue
     logoUrl: string
+    slogan?: string | null
+    keywords?: BrandIdentityCreatekeywordsInput | string[]
     createdAt?: Date | string
   }
 
@@ -8507,6 +8808,8 @@ export namespace Prisma {
     colors?: JsonFilter<"BrandIdentity">
     fonts?: JsonFilter<"BrandIdentity">
     logoUrl?: StringFilter<"BrandIdentity"> | string
+    slogan?: StringNullableFilter<"BrandIdentity"> | string | null
+    keywords?: StringNullableListFilter<"BrandIdentity">
     createdAt?: DateTimeFilter<"BrandIdentity"> | Date | string
   }
 
@@ -8516,6 +8819,10 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
+    plan?: string
+    credits?: number
+    lastCreditReset?: Date | string
+    lifetimeDownloads?: number
     sessions?: SessionCreateNestedManyWithoutUserInput
     brands?: BrandIdentityCreateNestedManyWithoutUserInput
   }
@@ -8526,6 +8833,10 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
+    plan?: string
+    credits?: number
+    lastCreditReset?: Date | string
+    lifetimeDownloads?: number
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     brands?: BrandIdentityUncheckedCreateNestedManyWithoutUserInput
   }
@@ -8552,6 +8863,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    plan?: StringFieldUpdateOperationsInput | string
+    credits?: IntFieldUpdateOperationsInput | number
+    lastCreditReset?: DateTimeFieldUpdateOperationsInput | Date | string
+    lifetimeDownloads?: IntFieldUpdateOperationsInput | number
     sessions?: SessionUpdateManyWithoutUserNestedInput
     brands?: BrandIdentityUpdateManyWithoutUserNestedInput
   }
@@ -8562,6 +8877,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    plan?: StringFieldUpdateOperationsInput | string
+    credits?: IntFieldUpdateOperationsInput | number
+    lastCreditReset?: DateTimeFieldUpdateOperationsInput | Date | string
+    lifetimeDownloads?: IntFieldUpdateOperationsInput | number
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     brands?: BrandIdentityUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -8572,6 +8891,10 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
+    plan?: string
+    credits?: number
+    lastCreditReset?: Date | string
+    lifetimeDownloads?: number
     accounts?: AccountCreateNestedManyWithoutUserInput
     brands?: BrandIdentityCreateNestedManyWithoutUserInput
   }
@@ -8582,6 +8905,10 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
+    plan?: string
+    credits?: number
+    lastCreditReset?: Date | string
+    lifetimeDownloads?: number
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     brands?: BrandIdentityUncheckedCreateNestedManyWithoutUserInput
   }
@@ -8608,6 +8935,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    plan?: StringFieldUpdateOperationsInput | string
+    credits?: IntFieldUpdateOperationsInput | number
+    lastCreditReset?: DateTimeFieldUpdateOperationsInput | Date | string
+    lifetimeDownloads?: IntFieldUpdateOperationsInput | number
     accounts?: AccountUpdateManyWithoutUserNestedInput
     brands?: BrandIdentityUpdateManyWithoutUserNestedInput
   }
@@ -8618,6 +8949,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    plan?: StringFieldUpdateOperationsInput | string
+    credits?: IntFieldUpdateOperationsInput | number
+    lastCreditReset?: DateTimeFieldUpdateOperationsInput | Date | string
+    lifetimeDownloads?: IntFieldUpdateOperationsInput | number
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     brands?: BrandIdentityUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -8628,6 +8963,10 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
+    plan?: string
+    credits?: number
+    lastCreditReset?: Date | string
+    lifetimeDownloads?: number
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
   }
@@ -8638,6 +8977,10 @@ export namespace Prisma {
     email: string
     emailVerified?: Date | string | null
     image?: string | null
+    plan?: string
+    credits?: number
+    lastCreditReset?: Date | string
+    lifetimeDownloads?: number
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
   }
@@ -8664,6 +9007,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    plan?: StringFieldUpdateOperationsInput | string
+    credits?: IntFieldUpdateOperationsInput | number
+    lastCreditReset?: DateTimeFieldUpdateOperationsInput | Date | string
+    lifetimeDownloads?: IntFieldUpdateOperationsInput | number
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
   }
@@ -8674,6 +9021,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    plan?: StringFieldUpdateOperationsInput | string
+    credits?: IntFieldUpdateOperationsInput | number
+    lastCreditReset?: DateTimeFieldUpdateOperationsInput | Date | string
+    lifetimeDownloads?: IntFieldUpdateOperationsInput | number
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -8706,6 +9057,8 @@ export namespace Prisma {
     colors: JsonNullValueInput | InputJsonValue
     fonts: JsonNullValueInput | InputJsonValue
     logoUrl: string
+    slogan?: string | null
+    keywords?: BrandIdentityCreatekeywordsInput | string[]
     createdAt?: Date | string
   }
 
@@ -8781,6 +9134,8 @@ export namespace Prisma {
     colors?: JsonNullValueInput | InputJsonValue
     fonts?: JsonNullValueInput | InputJsonValue
     logoUrl?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
+    keywords?: BrandIdentityUpdatekeywordsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -8790,6 +9145,8 @@ export namespace Prisma {
     colors?: JsonNullValueInput | InputJsonValue
     fonts?: JsonNullValueInput | InputJsonValue
     logoUrl?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
+    keywords?: BrandIdentityUpdatekeywordsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -8799,6 +9156,8 @@ export namespace Prisma {
     colors?: JsonNullValueInput | InputJsonValue
     fonts?: JsonNullValueInput | InputJsonValue
     logoUrl?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
+    keywords?: BrandIdentityUpdatekeywordsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

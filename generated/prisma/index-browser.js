@@ -125,7 +125,11 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   emailVerified: 'emailVerified',
-  image: 'image'
+  image: 'image',
+  plan: 'plan',
+  credits: 'credits',
+  lastCreditReset: 'lastCreditReset',
+  lifetimeDownloads: 'lifetimeDownloads'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -165,6 +169,8 @@ exports.Prisma.BrandIdentityScalarFieldEnum = {
   colors: 'colors',
   fonts: 'fonts',
   logoUrl: 'logoUrl',
+  slogan: 'slogan',
+  keywords: 'keywords',
   createdAt: 'createdAt'
 };
 

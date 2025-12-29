@@ -9,6 +9,7 @@ import harmoniesPlugin from "colord/plugins/harmonies";
 import mixPlugin from "colord/plugins/mix";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { checkAndResetCredits } from "@/lib/userLimits";
 
 // Extend colord with necessary plugins
 extend([harmoniesPlugin, mixPlugin]);
@@ -21,6 +22,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const userId = session.user.id;
+
+    // Check credits BEFORE processing (saves AI costs if no credits)
+    const creditCheck = await checkAndResetCredits(userId);
+
+    if (!creditCheck.allowed) {
+      return NextResponse.json(
+        {
+          error:
+            "Weekly generation limit reached. Upgrade to Pro for unlimited access.",
+          code: "LIMIT_REACHED",
+        },
+        { status: 403 }
+      );
+    }
 
     // 2. Parse Input
     const { prompt, vibe } = await req.json();
@@ -80,10 +95,12 @@ export async function POST(req: Request) {
 
     // Log AI response for debugging
     console.log("AI Response:", strategyResponse.choices[0]?.message?.content);
-    
+
     let aiData;
     try {
-      aiData = JSON.parse(strategyResponse.choices[0]?.message?.content || "{}");
+      aiData = JSON.parse(
+        strategyResponse.choices[0]?.message?.content || "{}"
+      );
       console.log("Parsed AI Data:", aiData);
     } catch (parseError) {
       console.error("Failed to parse AI response:", parseError);
@@ -94,7 +111,15 @@ export async function POST(req: Request) {
     }
 
     // Validate AI data has required fields
-    const requiredFields = ["brand_name", "base_color", "color_harmony", "font_name", "logo_prompt", "slogan"];
+    const requiredFields = [
+      "brand_name",
+      "base_color",
+      "color_harmony",
+      "font_name",
+      "logo_prompt",
+      "slogan",
+      "keywords",
+    ];
     for (const field of requiredFields) {
       if (!aiData[field]) {
         console.error(`AI response missing required field: ${field}`, aiData);
@@ -125,10 +150,20 @@ export async function POST(req: Request) {
 
     // Generate harmony colors safely
     const harmonyType = aiData.color_harmony;
-    const validHarmonies = ['analogous', 'complementary', 'triadic', 'split-complementary'];
-    const safeHarmonyType = validHarmonies.includes(harmonyType) ? harmonyType : 'complementary';
+    const validHarmonies = [
+      "analogous",
+      "complementary",
+      "triadic",
+      "split-complementary",
+    ];
+    const safeHarmonyType = validHarmonies.includes(harmonyType)
+      ? harmonyType
+      : "complementary";
 
-    console.log(`Generating ${safeHarmonyType} harmony for color:`, base.toHex());
+    console.log(
+      `Generating ${safeHarmonyType} harmony for color:`,
+      base.toHex()
+    );
 
     let harmonyColors: string[] = [];
     try {
@@ -136,36 +171,43 @@ export async function POST(req: Request) {
       harmonyColors = harmonyResult.map((c: any) => c.toHex());
       console.log("Generated harmony colors:", harmonyColors);
     } catch (harmonyError) {
-      console.warn("Error generating harmonies, using manual harmonies:", harmonyError);
-      
+      console.warn(
+        "Error generating harmonies, using manual harmonies:",
+        harmonyError
+      );
+
       // Manual fallback harmonies based on HSL
       const hsl = base.toHsl();
       const h = hsl.h;
-      
-      switch(safeHarmonyType) {
-        case 'complementary':
-          harmonyColors = [colord({ h: (h + 180) % 360, s: hsl.s, l: hsl.l }).toHex()];
+
+      switch (safeHarmonyType) {
+        case "complementary":
+          harmonyColors = [
+            colord({ h: (h + 180) % 360, s: hsl.s, l: hsl.l }).toHex(),
+          ];
           break;
-        case 'analogous':
+        case "analogous":
           harmonyColors = [
             colord({ h: (h + 30) % 360, s: hsl.s, l: hsl.l }).toHex(),
-            colord({ h: (h - 30 + 360) % 360, s: hsl.s, l: hsl.l }).toHex()
+            colord({ h: (h - 30 + 360) % 360, s: hsl.s, l: hsl.l }).toHex(),
           ];
           break;
-        case 'triadic':
+        case "triadic":
           harmonyColors = [
             colord({ h: (h + 120) % 360, s: hsl.s, l: hsl.l }).toHex(),
-            colord({ h: (h + 240) % 360, s: hsl.s, l: hsl.l }).toHex()
+            colord({ h: (h + 240) % 360, s: hsl.s, l: hsl.l }).toHex(),
           ];
           break;
-        case 'split-complementary':
+        case "split-complementary":
           harmonyColors = [
             colord({ h: (h + 150) % 360, s: hsl.s, l: hsl.l }).toHex(),
-            colord({ h: (h + 210) % 360, s: hsl.s, l: hsl.l }).toHex()
+            colord({ h: (h + 210) % 360, s: hsl.s, l: hsl.l }).toHex(),
           ];
           break;
         default:
-          harmonyColors = [colord({ h: (h + 180) % 360, s: hsl.s, l: hsl.l }).toHex()];
+          harmonyColors = [
+            colord({ h: (h + 180) % 360, s: hsl.s, l: hsl.l }).toHex(),
+          ];
       }
     }
 
@@ -189,15 +231,15 @@ export async function POST(req: Request) {
         }
       }
       palette = uniquePalette;
-      
+
       // If we ended up with less than 3 colors, add some tints/shades
       if (palette.length < 3) {
         palette.push(
           base.lighten(0.4).toHex(), // 40% lighter
-          base.darken(0.4).toHex()   // 40% darker
+          base.darken(0.4).toHex() // 40% darker
         );
       }
-      
+
       console.log("Final unique palette:", palette);
     } catch (paletteError) {
       console.error("Error creating palette, using fallback:", paletteError);
@@ -209,13 +251,13 @@ export async function POST(req: Request) {
     // ================================================================
     console.log("Generating image with prompt:", aiData.logo_prompt);
     let logoUrl: string;
-    
+
     try {
-      const imageBlob = await hf.textToImage({
+      const imageBlob = (await hf.textToImage({
         model: "black-forest-labs/FLUX.1-schnell",
         inputs: `${aiData.logo_prompt}, minimal vector logo, flat design, white background, high quality, 4k, clean lines, no text, isolated on white`,
         parameters: { num_inference_steps: 4, guidance_scale: 7.5 },
-      }) as unknown as Blob;
+      })) as unknown as Blob;
 
       const arrayBuffer = await imageBlob.arrayBuffer();
       const imageBuffer = Buffer.from(arrayBuffer);
@@ -230,50 +272,59 @@ export async function POST(req: Request) {
       );
     }
 
-    // 7. Database Step
-    console.log("Saving to database...");
-    try {
-      const newBrand = await prisma.brandIdentity.create({
+    // ================================================================
+    // 8. Database Step: Transaction (Save Brand + Deduct Credit)
+    // ================================================================
+    console.log("Saving to database and deducting credit...");
+
+    // Prepare database operations
+    const operations = [];
+
+    // A. Create the Brand Identity
+    operations.push(
+      prisma.brandIdentity.create({
         data: {
           userId: userId,
           brandName: aiData.brand_name,
-          colors: {
-            base: base.toHex(), // Use the actual color we're using (could be fallback)
-            harmony: safeHarmonyType,
-            palette: palette,
-          },
+          colors: palette, // According to your schema, colors is a Json field storing palette array
           fonts: {
             selected: aiData.font_name,
             category: vibe,
           },
           logoUrl: logoUrl,
-          // slogan: aiData.slogan,     // TODO: Uncomment after migration
-          // keywords: aiData.keywords || [], // TODO: Uncomment after migration
+          slogan: aiData.slogan,
+          keywords: aiData.keywords || [],
         },
-      });
+      })
+    );
 
-      console.log("Brand created successfully:", newBrand.id);
-
-      return NextResponse.json({
-        success: true,
-        brand: { id: newBrand.id },
-      });
-
-    } catch (dbError) {
-      console.error("Database error:", dbError);
-      return NextResponse.json(
-        { error: "Failed to save brand identity" },
-        { status: 500 }
+    // B. Deduct Credit (Only if NOT Pro)
+    if (creditCheck.plan !== "PRO") {
+      operations.push(
+        prisma.user.update({
+          where: { id: userId },
+          data: { credits: { decrement: 1 } },
+        })
       );
     }
 
+    // Execute transaction
+    const result = await prisma.$transaction(operations);
+    const newBrand = result[0]; // First result is the brand
+
+    console.log("Success! Brand ID:", newBrand.id);
+    console.log(`Credits deducted: ${creditCheck.plan === "PRO" ? 0 : 1}`);
+
+    return NextResponse.json({
+      success: true,
+      brand: { id: newBrand.id },
+      creditsRemaining: creditCheck.plan === "PRO" ? "Unlimited" : creditCheck.credits - 1,
+      plan: creditCheck.plan,
+    });
   } catch (error: any) {
     console.error("Generation Error:", error);
     return NextResponse.json(
-      { 
-        error: "Failed to generate brand identity", 
-        details: error.message 
-      },
+      { error: "Failed to generate brand identity", details: error.message },
       { status: 500 }
     );
   }

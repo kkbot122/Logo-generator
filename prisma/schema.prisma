@@ -9,14 +9,20 @@ generator client {
 
 // User & Auth
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  brands        BrandIdentity[]
+
+  plan            String   @default("FREE") // "FREE" or "PRO"
+  credits         Int      @default(2) // Weekly generation credits
+  lastCreditReset DateTime @default(now()) // When did the week start?
+
+  lifetimeDownloads Int             @default(0)
+  brands            BrandIdentity[]
 }
 
 model Account {
