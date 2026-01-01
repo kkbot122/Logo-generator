@@ -62,7 +62,7 @@ export default function CreateBrandModal({ isOpen, onClose }: { isOpen: boolean;
 
       if (data.brand?.id) {
         toast.success("Brand Identity Created!");
-        router.push(`/brand/${data.brand.id}`);
+        router.push(`/projects/${data.brand.id}`);
       } else {
         throw new Error(data.error || 'Unknown error');
       }
