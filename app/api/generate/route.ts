@@ -10,6 +10,21 @@ import mixPlugin from "colord/plugins/mix";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { checkAndResetCredits } from "@/lib/userLimits";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+// Initialize Redis & Rate Limiter outside the handler
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
+
+const ratelimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(3, "1 m"), // Limit: 3 requests per 1 minute
+  analytics: true,
+  prefix: "@upstash/ratelimit",
+});
 
 // Extend colord with necessary plugins
 extend([harmoniesPlugin, mixPlugin]);
@@ -23,7 +38,30 @@ export async function POST(req: Request) {
     }
     const userId = session.user.id;
 
-    // Check credits BEFORE processing (saves AI costs if no credits)
+    // ============================================================
+    // 1.5 Rate Limiting Check (ADDED THIS SECTION)
+    // ============================================================
+    // We check this EARLY to prevent spam from hitting the DB or AI
+    const { success, limit, reset, remaining } = await ratelimit.limit(userId);
+
+    if (!success) {
+      return NextResponse.json(
+        {
+          error: "You are generating too fast! Please wait a moment.",
+          code: "RATE_LIMIT_EXCEEDED",
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": limit.toString(),
+            "X-RateLimit-Remaining": remaining.toString(),
+            "X-RateLimit-Reset": reset.toString(),
+          },
+        }
+      );
+    }
+
+    // 2. Check credits BEFORE processing (saves AI costs if no credits)
     const creditCheck = await checkAndResetCredits(userId);
 
     if (!creditCheck.allowed) {
@@ -37,7 +75,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2. Parse Input
+    // 3. Parse Input
     const { prompt, vibe } = await req.json();
 
     // Validate input
@@ -48,7 +86,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Prepare Font Menu
+    // 4. Prepare Font Menu
     const availableFonts = fonts
       .filter((f) => f.category === vibe)
       .map((f) => f.name)
@@ -61,7 +99,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 4. AI Step 1: Brand Strategy
+    // 5. AI Step 1: Brand Strategy
     console.log("Generating brand strategy for user:", userId);
     const strategyResponse = await groq.chat.completions.create({
       messages: [
@@ -131,7 +169,7 @@ export async function POST(req: Request) {
     }
 
     // ================================================================
-    // 5. Color Palette Generation with Error Handling
+    // 6. Color Palette Generation with Error Handling
     // ================================================================
 
     // Safe color parsing with fallback
@@ -247,7 +285,7 @@ export async function POST(req: Request) {
     }
 
     // ================================================================
-    // 6. AI Step 2: Image Generation
+    // 7. AI Step 2: Image Generation
     // ================================================================
     console.log("Generating image with prompt:", aiData.logo_prompt);
     let logoUrl: string;
@@ -318,7 +356,8 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       brand: { id: newBrand.id },
-      creditsRemaining: creditCheck.plan === "PRO" ? "Unlimited" : creditCheck.credits - 1,
+      creditsRemaining:
+        creditCheck.plan === "PRO" ? "Unlimited" : creditCheck.credits - 1,
       plan: creditCheck.plan,
     });
   } catch (error: any) {

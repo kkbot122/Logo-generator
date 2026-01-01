@@ -62,49 +62,48 @@ export default function Home() {
         </div>
 
         {/* STATS ROW */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12 border-t border-black border-b py-8">
-          <StatItem label="Logos Generated" value="2.5 MILLION" />
-          <StatItem label="Active Users" value="80,000+" />
-          <StatItem label="Avg Generation Time" value="0.4 SECONDS" />
+        <div className="grid grid-cols-2 md:grid-cols-4 justify-items-center gap-8 mt-12 border-t border-black border-b py-8">
+          <StatItem label="Logos Generated" value="100+" />
+          <StatItem label="Typographys" value="20+" />
+          <StatItem label="Avg Generation Time" value="2 SECONDS" />
           <StatItem label="Brand Assets" value="UNLIMITED" />
         </div>
       </section>
 
       {/* SHOWCASE SECTION ("Partners in meaningful change") */}
-      <section className="px-4 md:px-8 py-16 max-w-7xl mx-auto w-full">
+      <section className="px-4 md:px-8 py-6 max-w-7xl mx-auto w-full">
         <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-none mb-16 max-w-4xl">
           Partners in <br />
           Visual Identity.
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
+        <div className="grid grid-cols-3 md:grid-cols-4 gap-x-8 gap-y-16">
           {/* Card 1 */}
           <ShowcaseCard
             title="The Abstract Series"
             category="Vector Geometry"
             description="Complex geometric shapes generated from simple text prompts."
-            color="bg-orange-600"
+            imageSrc="/abstract.png"
           />
-          {/* Card 2 */}
           <ShowcaseCard
             title="Modern Typography"
             category="Font Pairing"
             description="AI-curated font combinations that pass accessibility standards."
-            color="bg-blue-700"
+            imageSrc="/typo3.png"
           />
-          {/* Card 3 */}
           <ShowcaseCard
-            title="Eco Branding"
-            category="Organic Shapes"
-            description="Natural motifs generated for sustainable businesses."
-            color="bg-green-800"
+            title="Eco & Organic"
+            category="Natural Motifs"
+            description="Sustainable branding identities with earthy color palettes."
+            // TODO: Replace with your actual image path
+            imageSrc="/eco.png"
           />
-          {/* Card 4 */}
           <ShowcaseCard
-            title="Tech Startups"
-            category="Minimalism"
-            description="Clean, scalable logos optimized for app icons and dark mode."
-            color="bg-zinc-900"
+            title="Tech Minimalist"
+            category="App Icons"
+            description="Clean, scalable symbols optimized for digital products."
+            // TODO: Replace with your actual image path
+            imageSrc="/tech.png"
           />
         </div>
       </section>
@@ -116,15 +115,17 @@ export default function Home() {
           Strategic Clarity.
         </h2>
 
-        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-neutral-200 mt-8 overflow-hidden">
+        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-[#f4f2ee] mt-8 overflow-hidden">
           {/* Placeholder for Process Image */}
-          <div className="absolute inset-0 bg-neutral-300 flex items-center justify-center">
-            <div className="grid grid-cols-3 gap-4 w-1/2 opacity-50">
-              <div className="h-24 bg-white rounded-sm"></div>
-              <div className="h-24 bg-white rounded-sm"></div>
-              <div className="h-24 bg-white rounded-sm"></div>
-              <div className="h-24 bg-white rounded-sm col-span-2"></div>
-              <div className="h-24 bg-white rounded-sm"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="grid grid-cols-3 gap-4 w-1/2 opacity-100">
+              <Image
+                // TODO: Replace with an image representing your process/strategy
+                src="/brand_kit.png"
+                alt="Our Strategic Approach Diagram"
+                fill
+                className="object-contain hover:scale-105 transition-transform duration-700"
+              />
             </div>
           </div>
         </div>
@@ -142,34 +143,6 @@ export default function Home() {
             title="Brand Kits"
             desc="Get color palettes, fonts, and social covers instantly."
           />
-        </div>
-      </section>
-
-      {/* BLOG / THINKING SECTION */}
-      <section className="px-4 md:px-8 py-16 border-t border-black/10 w-full bg-white">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black tracking-tighter uppercase mb-12">
-            Recent Thinking <br />
-            And Updates.
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <BlogCard
-              imageColor="bg-purple-200"
-              title="The Death of Flat Design?"
-              tag="Design Theory"
-            />
-            <BlogCard
-              imageColor="bg-yellow-200"
-              title="AI vs Human: The Collaboration"
-              tag="Technology"
-            />
-            <BlogCard
-              imageColor="bg-pink-200"
-              title="Color Psychology in 2025"
-              tag="Guides"
-            />
-          </div>
         </div>
       </section>
 
@@ -193,7 +166,7 @@ export default function Home() {
 
           <div className="flex flex-col gap-4">
             <button className="w-full md:w-auto bg-[#F3F2ED] text-black px-8 py-4 text-xl font-bold uppercase tracking-tight hover:bg-neutral-300 transition-colors flex items-center justify-between group">
-              Start Designing
+              <Link href="/auth/login">Start Designing</Link>
               <ArrowRight className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -237,34 +210,37 @@ function ShowcaseCard({
   title,
   category,
   description,
-  color,
+  imageSrc,
 }: {
   title: string;
   category: string;
   description: string;
-  color: string;
+  imageSrc: string;
 }) {
   return (
     <div className="group cursor-pointer">
-      <div
-        className={`w-full aspect-square ${color} mb-6 overflow-hidden relative`}
-      >
-        {/* Placeholder for actual image */}
-        <div className="absolute inset-0 flex items-center justify-center text-white/20 group-hover:scale-105 transition-transform duration-500">
-          <LayoutGrid size={64} />
-        </div>
+      <div className="w-full aspect-square bg-neutral-100 mb-6 overflow-hidden relative rounded-sm">
+        <Image
+          src={imageSrc}
+          alt={title}
+          fill
+          className="object-cover group-hover:scale-110 transition-transform duration-500"
+        />
       </div>
       <div className="flex flex-col gap-2 border-t border-black pt-4">
         <div className="flex justify-between items-start">
-          <h3 className="text-2xl font-bold uppercase tracking-tight">
+          <h3 className="text-lg md:text-xl font-bold uppercase tracking-tight leading-tight">
             {title}
           </h3>
-          <ArrowRight className="-rotate-45 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <ArrowRight
+            className="-rotate-45 opacity-0 group-hover:opacity-100 transition-opacity"
+            size={20}
+          />
         </div>
-        <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
+        <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-gray-500">
           {category}
         </p>
-        <p className="text-sm text-gray-600 mt-2 max-w-sm">{description}</p>
+        <p className="text-xs text-gray-600 mt-2 line-clamp-3">{description}</p>
       </div>
     </div>
   );

@@ -2,16 +2,20 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react'; 
 import { 
   LayoutGrid, 
   Folder, 
   PieChart, 
   Settings, 
   LogOut,
+  Loader2 // Optional: for loading state
 } from 'lucide-react';
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { data: session, status } = useSession(); // <--- 2. Get Session Data
+  const user = session?.user;
 
   const navItems = [
     { label: 'Overview', href: '/dashboard', icon: LayoutGrid },
@@ -42,7 +46,9 @@ export default function Sidebar() {
           </div>
           <div className="flex flex-col gap-1">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              // Simple check: active if path starts with href (handles subpages)
+              const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
+              
               return (
                 <Link 
                   key={item.href} 
@@ -60,31 +66,54 @@ export default function Sidebar() {
             })}
           </div>
         </div>
-
-        {/* Secondary Group */}
-        {/* <div>
-          <div className="px-4 mb-3 text-[10px] font-bold uppercase tracking-widest text-[#F3F2ED]/40">
-            Actions
-          </div>
-          <button className="w-full flex items-center gap-3 px-4 py-3 text-[#F3F2ED]/80 hover:bg-[#F3F2ED]/10 rounded-sm transition-all group">
-             <div className="p-1 border border-[#F3F2ED]/40 rounded-sm group-hover:border-white">
-               <Plus size={12} />
-             </div>
-             <span className="text-xs uppercase tracking-widest">New Project</span>
-          </button>
-        </div> */}
       </nav>
 
       {/* 3. FOOTER / PROFILE */}
       <div className="p-4 border-t border-[#F3F2ED]/10">
-        <div className="flex items-center gap-3 p-3 rounded-sm hover:bg-[#F3F2ED]/5 transition-colors cursor-pointer">
-          <div className="h-10 w-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-sm" />
-          <div className="flex flex-col flex-1 min-w-0">
-            <span className="text-xs font-bold uppercase tracking-widest truncate">John Doe</span>
-            <span className="text-[10px] text-neutral-500 truncate">Pro Plan</span>
+        
+        {status === 'loading' ? (
+           // Loading State
+           <div className="flex items-center justify-center p-3">
+             <Loader2 className="animate-spin text-neutral-500" size={20} />
+           </div>
+        ) : (
+          // Authenticated State
+          <div className="flex items-center gap-3 p-3 rounded-sm hover:bg-[#F3F2ED]/5 transition-colors group">
+            
+            {/* User Image or Fallback Gradient */}
+            {user?.image ? (
+               <img 
+                 src={user.image} 
+                 alt={user.name || 'User'} 
+                 className="h-10 w-10 rounded-sm object-cover bg-neutral-800"
+               />
+            ) : (
+               <div className="h-10 w-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-sm flex items-center justify-center font-bold text-xs">
+                 {user?.name?.[0] || 'U'}
+               </div>
+            )}
+
+            {/* User Info */}
+            <div className="flex flex-col flex-1 min-w-0">
+              <span className="text-xs font-bold uppercase tracking-widest truncate">
+                {user?.name || 'User'}
+              </span>
+              <span className="text-[10px] text-neutral-500 truncate group-hover:text-neutral-400 transition-colors">
+                {user?.email}
+              </span>
+            </div>
+
+            {/* Sign Out Button */}
+            <button 
+              onClick={() => signOut({ callbackUrl: '/' })} 
+              className="p-2 hover:bg-white hover:text-black rounded-sm transition-all"
+              title="Sign Out"
+            >
+              <LogOut size={16} />
+            </button>
           </div>
-          <LogOut size={16} className="text-neutral-500 hover:text-white transition-colors" />
-        </div>
+        )}
+
       </div>
     </aside>
   );

@@ -164,11 +164,11 @@ export default function ProjectInterface({ brand }: Props) {
       {/* --- VISIBLE WEB INTERFACE --- */}
       <header className="px-8 py-6 flex justify-between items-center border-b border-black/10 bg-white sticky top-0 z-50">
         <Link
-          href="/dashboard"
+          href="/projects"
           className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest hover:underline decoration-2 underline-offset-4"
         >
           <ArrowLeft size={16} />
-          Dashboard
+          Projects
         </Link>
         <div className="flex gap-4">
           <button
