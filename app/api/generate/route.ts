@@ -89,8 +89,12 @@ export async function POST(req: Request) {
     // 4. Prepare Font Menu
     const availableFonts = fonts
       .filter((f) => f.category === vibe)
-      .map((f) => f.name)
+      .map((f) => `- ${f.name}: ${f.description}`)
       .join(", ");
+
+    // const fontNamesOnly = fonts
+    //   .filter((f) => f.category === vibe)
+    //   .map(f => f.name);
 
     if (!availableFonts) {
       return NextResponse.json(

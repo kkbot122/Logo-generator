@@ -101,7 +101,7 @@ function ProjectCard({ project }: { project: any }) {
   }
 
   return (
-    <Link href={`/brand/${project.id}`} className="group flex flex-col bg-white border border-black/10 rounded-sm overflow-hidden hover:shadow-md transition-all duration-300 hover:border-black">
+    <Link href={`/projects/${project.id}`} className="group flex flex-col bg-white border border-black/10 rounded-sm overflow-hidden hover:shadow-md transition-all duration-300 hover:border-black">
       {/* ... (Keep your existing card design exactly the same) ... */}
       
       {/* Image Container */}

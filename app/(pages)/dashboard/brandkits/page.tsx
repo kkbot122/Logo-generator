@@ -13,6 +13,7 @@ import {
   Copy,
 } from "lucide-react";
 import { SearchInput } from "@/components/SearchInput";
+import BrandKitExportButton from "@/components/BrandKitExportButton";
 
 export default async function BrandKitsPage({
   searchParams,
@@ -114,7 +115,7 @@ function BrandKitCard({ kit }: { kit: any }) {
             <span className="text-5xl font-serif italic block mb-[-10px] opacity-80 text-black">
               Aa
             </span>
-            <span className="text-5xl font-black block z-10 relative text-black">
+            <span className="text-5xl font-black block z-10 text-black">
               Bb
             </span>
           </div>
@@ -190,12 +191,7 @@ function BrandKitCard({ kit }: { kit: any }) {
           <button className="flex items-center justify-center gap-2 py-3 border border-black/10 hover:border-black rounded-sm text-[10px] font-bold uppercase tracking-widest transition-all hover:bg-neutral-50">
             <Copy size={12} /> Hex
           </button>
-          <Link
-            href={`/brand/${kit.id}`}
-            className="flex items-center justify-center gap-2 py-3 bg-black text-white hover:bg-neutral-800 rounded-sm text-[10px] font-bold uppercase tracking-widest transition-all"
-          >
-            <Download size={12} /> Export
-          </Link>
+          <BrandKitExportButton brand={kit} />
         </div>
       </div>
     </div>

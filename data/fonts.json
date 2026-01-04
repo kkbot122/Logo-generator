@@ -1,12 +1,92 @@
 [
-  { "name": "Clash Display", "category": "tame" },
-  { "name": "Panchang", "category": "tame" },
-  { "name": "Satoshi-Variable", "category": "tame" },
-  { "name": "Stardom", "category": "tame" },
-  { "name": "Telma", "category": "tame" },
-  { "name": "Basteleur", "category": "wild" },
-  { "name": "Cirrus Cumulus", "category": "wild" },
-  { "name": "Interlope", "category": "wild" },
-  { "name": "Lithops", "category": "wild" },
-  { "name": "Mess", "category": "wild" }
+  { 
+    "name": "Clash Display", 
+    "category": "tame", 
+    "description": "Elegant, high-end, structured. Good for: Fintech, Luxury, Modern Professional."
+  },
+  { 
+    "name": "Panchang", 
+    "category": "tame", 
+    "description": "Extended, aggressive, distinct. Good for: Streetwear, Bold Tech, Hypebeast."
+  },
+  { 
+    "name": "Satoshi-Variable", 
+    "category": "tame", 
+    "description": "Clean, geometric, modern sans-serif. Good for: SaaS, Startups, Minimalist apps."
+  },
+  { 
+    "name": "Stardom", 
+    "category": "tame", 
+    "description": "Retro-futuristic serif with flair. Good for: Fashion, Editorial, Music."
+  },
+  { 
+    "name": "Telma", 
+    "category": "tame", 
+    "description": "Bold, curvy, full of character. Good for: Lifestyle, quirky brands."
+  },
+  { 
+    "name": "Britney", 
+    "category": "tame", 
+    "description": "Unique, stylish, caligraphic, almost handwritten feel. Good for: Boutiques, Personal Personalities."
+  },
+  { 
+    "name": "Cabinet", 
+    "category": "tame", 
+    "description": "Simple, Grotesque sans with personality. Good for: Editorial, Modern Corporate."
+  },
+  { 
+    "name": "Outfit", 
+    "category": "tame", 
+    "description": "Friendly, rounded geometric sans. Good for: Social Apps, Friendly Tech."
+  },
+  { 
+    "name": "Pencerio", 
+    "category": "tame", 
+    "description": "Ultra-thin, high-fashion editorial. Good for: Perfume, High-end Jewelry."
+  },
+  { 
+    "name": "Tanker", 
+    "category": "tame", 
+    "description": "Heavy, condensed, industrial. Good for: Sports, Construction, Masculine brands."
+  },
+  { 
+    "name": "Basteleur", 
+    "category": "wild", 
+    "description": "Medieval, fantasy, soft edges. Good for: Organic food, Storytelling, Fantasy."
+  },
+  { 
+    "name": "Cirrus Cumulus", 
+    "category": "wild", 
+    "description": "Cloud-like, bubbly, Y2K retro. Good for: Gen-Z brands, Vaporwave."
+  },
+  { 
+    "name": "Interlope", 
+    "category": "wild", 
+    "description": "Glitchy, distorted, tech-dystopia. Good for: Cyberpunk, Gaming, Horror."
+  },
+  { 
+    "name": "Lithops", 
+    "category": "wild", 
+    "description": "Organic, cell-like, weird. Good for: Experimental Biology, Alien concepts."
+  },
+  { 
+    "name": "Mess", 
+    "category": "wild", 
+    "description": "Chaotic, scratchy, handwritten, very much like japanese. Good for: Grunge, Skateboarding, Rebellion."
+  },
+  { 
+    "name": "Aktura", 
+    "category": "wild", 
+    "description": "Sharp, alien, gothic, aggressive scripts. Good for: Metal bands, Dark fantasy."
+  },
+  { 
+    "name": "Kihim", 
+    "category": "wild", 
+    "description": "Tribal, sporty, organic, distinct. Good for: Cultural brands, Nature."
+  },
+  { 
+    "name": "Rosaline", 
+    "category": "wild", 
+    "description": "Elegant but twisted, gothic beauty. Good for: Vampire aesthetics, Dark Luxury."
+  }
 ]

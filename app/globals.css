@@ -42,6 +42,46 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Britney';
+  src: url('/fonts/tame/britney/WEB/fonts/Britney-Variable.woff2') format('woff2');
+  font-weight: 300 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cabinet';
+  src: url('/fonts/tame/cabinet/WEB/fonts/CabinetGrotesk-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/tame/outfit/WEB/fonts/Outfit-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pencerio';
+  src: url('/fonts/tame/pencerio/WEB/fonts/Pencerio-Hairline.woff') format('woff');
+  font-weight: 50;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Tanker';
+  src: url('/fonts/tame/tanker/WEB/fonts/Tanker-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
 /* --- WILD FONTS --- */
 
 @font-face {
@@ -76,6 +116,30 @@
   font-family: 'Mess';
   src: url('/fonts/wild/mess/Mess-Light_web.woff2') format('woff2');
   font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aktura';
+  src: url('/fonts/wild/aktura/WEB/fonts/Aktura-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kihim';
+  src: url('/fonts/wild/kihim/WEB/fonts/Kihim-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rosaline';
+  src: url('/fonts/wild/rosaline/WEB/fonts/Rosaline-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
   font-display: swap;
 }
 
