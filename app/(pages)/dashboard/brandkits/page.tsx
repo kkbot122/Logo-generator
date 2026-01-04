@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
-  Plus,
   Search,
   Download,
   MoreHorizontal,
@@ -13,18 +12,32 @@ import {
   Palette,
   Copy,
 } from "lucide-react";
+import { SearchInput } from "@/components/SearchInput";
 
-
-export default async function BrandKitsPage() {
+export default async function BrandKitsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ query?: string }>;
+}) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
     redirect("/");
   }
 
+  const params = await searchParams; // Await the params
+  const query = params?.query || "";
+
   // Fetch projects to generate kits from
   const kits = await prisma.brandIdentity.findMany({
-    where: { userId: session.user.id },
+    where: {
+      userId: session.user.id,
+      // Add the filter logic:
+      brandName: {
+        contains: query,
+        mode: "insensitive", // Case-insensitive search (e.g., "coffee" matches "Coffee")
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 
@@ -44,25 +57,15 @@ export default async function BrandKitsPage() {
         </div>
 
         <div className="flex items-center gap-3 w-full md:w-auto">
-          <div className="relative flex-1 md:w-64 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-neutral-400" />
-            <input
-              type="text"
-              placeholder="FIND ASSETS..."
-              className="w-full bg-white border border-black/10 pl-9 pr-4 h-10 text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:border-black transition-all rounded-sm"
-            />
-          </div>
-          <button className="h-10 px-5 bg-black text-white hover:bg-neutral-800 transition-colors rounded-sm flex items-center gap-2 text-xs font-bold uppercase tracking-widest shadow-sm">
-            <Plus size={14} />
-            <span className="hidden sm:inline">Create Kit</span>
-          </button>
+          {/* 4. Replace the old input with your Client Component */}
+          <SearchInput />
         </div>
       </header>
 
       {/* 2. MAIN GRID */}
       <main className="p-8">
         {kits.length === 0 ? (
-          <EmptyState />
+          <EmptyState query={query}/>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {kits.map((kit) => (
@@ -199,25 +202,28 @@ function BrandKitCard({ kit }: { kit: any }) {
   );
 }
 
-function EmptyState() {
+function EmptyState({ query }: { query: string }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[40vh] border-2 border-dashed border-black/10 rounded-sm p-12">
       <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mb-6">
         <Palette size={24} className="opacity-30" />
       </div>
       <h3 className="text-xl font-black uppercase tracking-tight mb-2">
-        No Brand Kits Found
+        {query ? `No results for "${query}"` : "No Brand Kits Found"}
       </h3>
       <p className="text-sm text-neutral-500 max-w-xs text-center mb-6">
-        Create a project first. Brand kits are automatically generated from your
-        design projects.
+        {query
+          ? "Try a different search term."
+          : "Create a project first. Brand kits are automatically generated from your design projects."}
       </p>
-      <Link
-        href="/generate"
-        className="px-6 py-3 bg-black text-white text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-neutral-800"
-      >
-        Generate New Brand
-      </Link>
+      {!query && (
+        <Link
+          href="/generate"
+          className="px-6 py-3 bg-black text-white text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-neutral-800"
+        >
+          Generate New Brand
+        </Link>
+      )}
     </div>
   );
 }

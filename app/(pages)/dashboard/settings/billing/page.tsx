@@ -4,15 +4,73 @@ import {
   CreditCard, 
   Zap, 
   Download, 
-  Clock, 
-  AlertCircle 
 } from "lucide-react";
+import { authOptions } from "@/lib/auth"; // Your Auth helper
+import  { getServerSession } from "next-auth/next";
+import { prisma } from "@/lib/prisma"; // Your DB helper
+import { redirect } from "next/navigation";
 
-export default function BillingPage() {
+// 1. CONFIGURATION: Define the limits for each plan here
+const PLAN_CONFIG = {
+  FREE: {
+    label: "Free Tier",
+    limit: 2, // Matches your schema @default(2)
+    price: "$0",
+    features: ['2 Credits/week', 'Standard Speed', 'PNG Export Only', 'Community Support']
+  },
+  PRO: {
+    label: "Professional",
+    limit: 50,
+    price: "$29",
+    features: ['50 Credits/week', 'Fast Generation', 'Vector (SVG) Export', 'Brand Kits', 'Priority Support']
+  },
+  AGENCY: {
+    label: "Agency",
+    limit: 1000,
+    price: "$99",
+    features: ['Unlimited Credits', 'Turbo Mode', 'White-label Reports', 'API Access', 'Dedicated Manager']
+  }
+};
+
+export default async function BillingPage() {
+  // 2. FETCH REAL DATA
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) redirect("/");
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      credits: true,
+      plan: true,
+      lastCreditReset: true, 
+    }
+  });
+
+  if (!user) redirect("/");
+
+  // 3. CALCULATE LOGIC
+  const currentPlanKey = (user.plan || "FREE").toUpperCase();
+  // Safe fallback if plan string doesn't match config
+  const planDetails = PLAN_CONFIG[currentPlanKey as keyof typeof PLAN_CONFIG] || PLAN_CONFIG.FREE;
+  
+  const maxCredits = planDetails.limit;
+  const creditsRemaining = user.credits;
+  
+  // Progress Bar Math
+  const usagePercentage = Math.min(100, Math.max(0, (creditsRemaining / maxCredits) * 100));
+
+  // Calculate Next Reset Date (Weekly)
+  // Logic: lastReset + 7 days
+  const nextReset = new Date(user.lastCreditReset);
+  nextReset.setDate(nextReset.getDate() + 7);
+  const formattedResetDate = nextReset.toLocaleDateString('en-US', { 
+    month: 'short', day: 'numeric', year: 'numeric' 
+  });
+
   return (
     <div className="space-y-16 animate-in fade-in duration-500">
       
-      {/* SECTION 1: CURRENT STATUS */}
+      {/* SECTION 1: DYNAMIC STATUS CARDS */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         {/* Active Plan Card */}
@@ -22,24 +80,30 @@ export default function BillingPage() {
            
            <div className="relative z-10">
               <div className="flex items-center gap-2 mb-4">
-                 <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+                 <span className={`h-2 w-2 rounded-full animate-pulse ${currentPlanKey === 'FREE' ? 'bg-green-500' : 'bg-purple-500'}`}></span>
                  <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Current Plan</span>
               </div>
-              <h2 className="text-4xl font-black uppercase tracking-tighter mb-2">Free Tier</h2>
+              <h2 className="text-4xl font-black uppercase tracking-tighter mb-2">
+                {planDetails.label}
+              </h2>
               <p className="text-sm text-neutral-400 max-w-[200px] leading-relaxed">
-                 Perfect for hobbyists and trying out the Aura Engine.
+                 {currentPlanKey === 'FREE' 
+                   ? "Perfect for hobbyists and trying out the Aura Engine." 
+                   : "High-performance access for professional brand designers."}
               </p>
            </div>
 
            <div className="relative z-10 pt-8 border-t border-white/10 mt-auto">
               <div className="flex justify-between items-end mb-2">
-                 <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Renewal Date</span>
-                 <span className="text-sm font-bold uppercase tracking-wide">Always Free</span>
+                 <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Next Credit Refill</span>
+                 <span className="text-sm font-bold uppercase tracking-wide">
+                    {formattedResetDate}
+                 </span>
               </div>
            </div>
         </div>
 
-        {/* Credit Usage Card */}
+        {/* Dynamic Credit Usage Card */}
         <div className="bg-white border border-black/10 p-8 rounded-sm flex flex-col justify-between min-h-[240px]">
            <div>
               <div className="flex justify-between items-start mb-6">
@@ -52,22 +116,29 @@ export default function BillingPage() {
               </div>
               
               <div className="flex items-end gap-2 mb-2">
-                 <span className="text-6xl font-black tracking-tighter leading-none">850</span>
-                 <span className="text-xl font-bold text-neutral-300 mb-1">/ 1000</span>
+                 <span className="text-6xl font-black tracking-tighter leading-none">
+                    {creditsRemaining}
+                 </span>
+                 <span className="text-xl font-bold text-neutral-300 mb-1">
+                    / {maxCredits}
+                 </span>
               </div>
               <span className="text-xs font-bold uppercase tracking-wide text-neutral-500">Credits Remaining</span>
            </div>
 
            {/* Progress Bar */}
            <div className="w-full bg-neutral-100 h-4 rounded-sm overflow-hidden border border-black/5 relative">
-              <div className="absolute top-0 left-0 h-full bg-black w-[85%]"></div>
+              <div 
+                className="absolute top-0 left-0 h-full bg-black transition-all duration-1000 ease-out"
+                style={{ width: `${usagePercentage}%` }}
+              ></div>
               {/* Stripe Pattern Overlay */}
               <div className="absolute inset-0 w-full h-full opacity-10" style={{ backgroundImage: 'linear-gradient(45deg, #fff 25%, transparent 25%, transparent 50%, #fff 50%, #fff 75%, transparent 75%, transparent)', backgroundSize: '10px 10px' }}></div>
            </div>
         </div>
       </section>
 
-      {/* SECTION 2: AVAILABLE PLANS */}
+      {/* SECTION 2: PLANS (Using Config) */}
       <section>
         <div className="mb-8">
            <h2 className="text-2xl font-black uppercase tracking-tight mb-2">Upgrade Plan</h2>
@@ -77,34 +148,21 @@ export default function BillingPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-           {/* Free Plan */}
-           <PlanCard 
-             name="Starter" 
-             price="$0" 
-             features={['1,000 Credits/mo', 'Standard Speed', 'PNG Export Only', 'Community Support']}
-             current
-           />
-           
-           {/* Pro Plan (Highlighted) */}
-           <PlanCard 
-             name="Professional" 
-             price="$29" 
-             period="/ mo"
-             features={['10,000 Credits/mo', 'Fast Generation', 'Vector (SVG) Export', 'Brand Kits', 'Priority Support']}
-             isPopular
-           />
-
-           {/* Team Plan */}
-           <PlanCard 
-             name="Agency" 
-             price="$99" 
-             period="/ mo"
-             features={['Unlimited Credits', 'Turbo Mode', 'White-label Reports', 'API Access', 'Dedicated Manager']}
-           />
+           {/* Render Plans Dynamically */}
+           {Object.entries(PLAN_CONFIG).map(([key, plan]) => (
+             <PlanCard 
+               key={key}
+               name={plan.label} 
+               price={plan.price}
+               features={plan.features}
+               current={currentPlanKey === key}
+               isPopular={key === 'PRO'}
+             />
+           ))}
         </div>
       </section>
 
-      {/* SECTION 3: PAYMENT METHOD */}
+      {/* SECTION 3: PAYMENT METHOD (Static for now) */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-12 border-t border-black/10">
          <div className="col-span-1">
             <h3 className="text-lg font-black uppercase tracking-tight mb-2">Payment Method</h3>
@@ -135,43 +193,21 @@ export default function BillingPage() {
          </div>
       </section>
 
-      {/* SECTION 4: INVOICE HISTORY */}
-      <section className="pt-12 border-t border-black/10">
-         <h3 className="text-lg font-black uppercase tracking-tight mb-6">Invoice History</h3>
-         
-         <div className="border border-black/10 rounded-sm bg-white overflow-hidden">
-            {/* Table Header */}
-            <div className="grid grid-cols-4 p-4 border-b border-black/10 bg-neutral-50 text-[10px] font-bold uppercase tracking-widest text-neutral-500">
-               <div>Date</div>
-               <div>Amount</div>
-               <div>Status</div>
-               <div className="text-right">Download</div>
-            </div>
-
-            {/* Rows */}
-            <InvoiceRow date="Oct 01, 2025" amount="$0.00" status="Paid" />
-            <InvoiceRow date="Sep 01, 2025" amount="$0.00" status="Paid" />
-            <InvoiceRow date="Aug 01, 2025" amount="$0.00" status="Paid" />
-         </div>
-      </section>
-
     </div>
   );
 }
 
-// --- SUBCOMPONENTS ---
+// --- SUBCOMPONENTS (Paste below the main function) ---
 
 function PlanCard({ 
   name, 
   price, 
-  period = "", 
   features, 
   current = false, 
   isPopular = false 
 }: { 
   name: string, 
   price: string, 
-  period?: string, 
   features: string[], 
   current?: boolean, 
   isPopular?: boolean 
@@ -183,26 +219,26 @@ function PlanCard({
         : 'border-black/10 bg-white hover:border-black/30'
     }`}>
       {isPopular && (
-         <div className="absolute top-0 right-0 bg-black text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-bl-sm">
+          <div className="absolute top-0 right-0 bg-black text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-bl-sm">
             Recommended
-         </div>
+          </div>
       )}
 
       <div className="mb-6">
-         <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">{name}</h3>
-         <div className="flex items-baseline gap-1">
-            <span className="text-4xl font-black tracking-tighter">{price}</span>
-            <span className="text-sm font-bold text-neutral-400">{period}</span>
-         </div>
+          <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">{name}</h3>
+          <div className="flex items-baseline gap-1">
+             <span className="text-4xl font-black tracking-tighter">{price}</span>
+             <span className="text-sm font-bold text-neutral-400">/ mo</span>
+          </div>
       </div>
 
       <ul className="space-y-4 mb-8 flex-1">
-         {features.map((feature, i) => (
-            <li key={i} className="flex items-start gap-3 text-xs font-medium text-neutral-600">
-               <Check size={14} className="text-black shrink-0" />
-               <span className="uppercase tracking-wide">{feature}</span>
-            </li>
-         ))}
+          {features.map((feature, i) => (
+             <li key={i} className="flex items-start gap-3 text-xs font-medium text-neutral-600">
+                <Check size={14} className="text-black shrink-0" />
+                <span className="uppercase tracking-wide">{feature}</span>
+             </li>
+          ))}
       </ul>
 
       <button 
@@ -215,27 +251,8 @@ function PlanCard({
                 : 'bg-white border border-black text-black hover:bg-black hover:text-white'
         }`}
       >
-         {current ? 'Current Plan' : 'Upgrade'}
+          {current ? 'Current Plan' : 'Upgrade'}
       </button>
     </div>
   )
-}
-
-function InvoiceRow({ date, amount, status }: { date: string, amount: string, status: string }) {
-   return (
-      <div className="grid grid-cols-4 p-4 border-b border-black/5 last:border-b-0 hover:bg-neutral-50 transition-colors items-center">
-         <div className="text-sm font-bold uppercase tracking-tight">{date}</div>
-         <div className="text-sm font-medium text-neutral-600">{amount}</div>
-         <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 bg-green-100 text-green-700 rounded-sm">
-               {status}
-            </span>
-         </div>
-         <div className="text-right">
-            <button className="inline-flex p-2 hover:bg-black hover:text-white rounded-sm transition-colors">
-               <Download size={14} />
-            </button>
-         </div>
-      </div>
-   )
 }

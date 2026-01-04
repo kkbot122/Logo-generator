@@ -116,22 +116,6 @@ export default function DashboardClient({
           <h2 className="text-2xl font-black uppercase tracking-tighter self-start md:self-auto">
             Recent Designs
           </h2>
-
-          <div className="flex w-full md:w-auto gap-4">
-            <div className="relative flex-1 md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="SEARCH..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-white border border-black/10 pl-10 pr-4 py-2 text-xs font-bold uppercase tracking-widest focus:outline-none focus:border-black transition-colors rounded-sm placeholder:text-gray-300"
-              />
-            </div>
-            <button className="px-4 py-2 border border-black/10 bg-white hover:border-black transition-colors rounded-sm flex items-center justify-center">
-              <Filter size={16} />
-            </button>
-          </div>
         </div>
 
         {/* Custom Table Layout */}
