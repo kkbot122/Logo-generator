@@ -9,7 +9,8 @@ import {
   PieChart, 
   Settings, 
   LogOut,
-  Loader2 // Optional: for loading state
+  Loader2,
+  BookTemplate
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -21,6 +22,7 @@ export default function Sidebar() {
     { label: 'Overview', href: '/dashboard', icon: LayoutGrid },
     { label: 'Projects', href: '/projects', icon: Folder },
     { label: 'Brand Kits', href: '/dashboard/brandkits', icon: PieChart },
+    { label: 'Prompt Library', href: '/dashboard/prompts', icon: BookTemplate },
     { label: 'Settings', href: '/dashboard/settings', icon: Settings },
   ];
 
