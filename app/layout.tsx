@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./Provider";
 import { Toaster } from "sonner";
+import SmoothScrolling from "@/components/SmoothScrolling";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +28,9 @@ export default function RootLayout({
         className={`${inter.className} bg-[#F3F2ED] text-black antialiased selection:bg-black selection:text-[#F3F2ED]`}
       >
         <Providers>
+          <SmoothScrolling>
           {children}
+        </SmoothScrolling>
           <Toaster position="bottom-right" theme="dark" />
         </Providers>
       </body>
